@@ -157,13 +157,15 @@ class TanApp {
         const btn = document.getElementById('voice-agent-btn');
         const status = document.getElementById('voice-status');
 
-        if (!('webkitSpeechRecognition' in window)) {
+        const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+
+        if (!SpeechRecognition) {
             btn.style.display = 'none';
             console.log('Web Speech API not supported');
             return;
         }
 
-        const recognition = new webkitSpeechRecognition();
+        const recognition = new SpeechRecognition();
         recognition.continuous = false;
         recognition.lang = 'tr-TR';
 
