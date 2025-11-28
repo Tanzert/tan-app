@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="tr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tan App - Hukuk Bürosu Yönetimi</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+    <div class="app-container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="logo-container">
+                <i class="fa-solid fa-scale-balanced"></i>
+                <h1>Tan App</h1>
+            </div>
+            <nav class="nav-menu">
+                <a href="#" class="nav-item active" data-view="dashboard">
+                    <i class="fa-solid fa-chart-pie"></i>
+                    <span>Genel Bakış</span>
+                </a>
+                <a href="#" class="nav-item" data-view="cases">
+                    <i class="fa-solid fa-briefcase"></i>
+                    <span>Davalar</span>
+                </a>
+                <a href="#" class="nav-item" data-view="new-case">
+                    <i class="fa-solid fa-plus-circle"></i>
+                    <span>Yeni Dava Ekle</span>
+                </a>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <header class="top-bar">
+                <h2 id="page-title">Genel Bakış</h2>
+                <div class="user-profile">
+                    <span>Av. Kullanıcı</span>
+                    <div class="avatar"><i class="fa-solid fa-user"></i></div>
+                </div>
+            </header>
+
+            <!-- Dashboard View -->
+            <section id="dashboard-view" class="view-section active">
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-icon blue"><i class="fa-solid fa-folder-open"></i></div>
+                        <div class="stat-info">
+                            <h3>Toplam Dava</h3>
+                            <p id="total-cases-count">0</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon orange"><i class="fa-solid fa-gavel"></i></div>
+                        <div class="stat-info">
+                            <h3>Yaklaşan Duruşma</h3>
+                            <p id="upcoming-hearings-count">0</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon green"><i class="fa-solid fa-check-circle"></i></div>
+                        <div class="stat-info">
+                            <h3>Tamamlanan</h3>
+                            <p id="completed-cases-count">0</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="recent-activity">
+                    <h3>Yaklaşan Duruşmalar</h3>
+                    <div id="upcoming-hearings-list" class="activity-list">
+                        <!-- Dynamic Content -->
+                        <div class="empty-state">Henüz yaklaşan duruşma yok.</div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Cases List View -->
+            <section id="cases-view" class="view-section hidden">
+                <div class="toolbar">
+                    <div class="search-bar">
+                        <i class="fa-solid fa-search"></i>
+                        <input type="text" id="case-search" placeholder="Dava, müvekkil veya mahkeme ara...">
+                    </div>
+                    <div class="filters">
+                        <select id="status-filter">
+                            <option value="all">Tüm Durumlar</option>
+                            <option value="active">Devam Eden</option>
+                            <option value="pending">Beklemede</option>
+                            <option value="closed">Tamamlandı</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="table-container">
+                    <table class="cases-table">
+                        <thead>
+                            <tr>
+                                <th>Esas No</th>
+                                <th>Müvekkil</th>
+                                <th>Mahkeme</th>
+                                <th>Dava Türü</th>
+                                <th>Duruşma Tarihi</th>
+                                <th>Durum</th>
+                                <th>İşlemler</th>
+                            </tr>
+                        </thead>
+                        <tbody id="cases-table-body">
+                            <!-- Dynamic Content -->
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- New Case View -->
+            <section id="new-case-view" class="view-section hidden">
+                <div class="form-container">
+                    <form id="new-case-form">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="case-no">Dava Esas No</label>
+                                <input type="text" id="case-no" required placeholder="Örn: 2023/123">
+                            </div>
+                            <div class="form-group">
+                                <label for="court">Mahkeme</label>
+                                <input type="text" id="court" required placeholder="Örn: İstanbul 1. Asliye Hukuk">
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="client">Müvekkil</label>
+                                <input type="text" id="client" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="opponent">Karşı Taraf</label>
+                                <input type="text" id="opponent">
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="case-type">Dava Türü</label>
+                                <select id="case-type">
+                                    <option value="ticari">Ticari Dava</option>
+                                    <option value="is">İş Davası</option>
+                                    <option value="aile">Aile Hukuku</option>
+                                    <option value="ceza">Ceza Davası</option>
+                                    <option value="icra">İcra Takibi</option>
+                                    <option value="diger">Diğer</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="status">Durum</label>
+                                <select id="status">
+                                    <option value="active">Devam Ediyor</option>
+                                    <option value="pending">Beklemede</option>
+                                    <option value="closed">Karara Bağlandı</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="filing-date">Dava Tarihi</label>
+                                <input type="date" id="filing-date">
+                            </div>
+                            <div class="form-group">
+                                <label for="hearing-date">Duruşma Tarihi</label>
+                                <input type="datetime-local" id="hearing-date">
+                                <small class="hint">Bu tarih takvime eklenebilir.</small>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="description">Konu / Açıklama</label>
+                            <textarea id="description" rows="4" placeholder="Dava hakkında kısa notlar..."></textarea>
+                        </div>
+                        <div class="form-actions">
+                            <button type="button" class="btn-secondary" onclick="app.navigateTo('cases')">İptal</button>
+                            <button type="submit" class="btn-primary">Davayı Kaydet</button>
+                        </div>
+                    </form>
+                </div>
+            </section>
+            <!-- Edit Case Modal -->
+            <div id="edit-modal" class="modal-overlay">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h2>Dava Düzenle</h2>
+                        <button class="close-modal" onclick="app.closeModal()"><i
+                                class="fa-solid fa-times"></i></button>
+                    </div>
+                    <form id="edit-case-form">
+                        <input type="hidden" id="edit-id">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="edit-case-no">Dava Esas No</label>
+                                <input type="text" id="edit-case-no" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="edit-court">Mahkeme</label>
+                                <input type="text" id="edit-court" required>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="edit-client">Müvekkil</label>
+                                <input type="text" id="edit-client" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="edit-opponent">Karşı Taraf</label>
+                                <input type="text" id="edit-opponent">
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="edit-case-type">Dava Türü</label>
+                                <select id="edit-case-type">
+                                    <option value="ticari">Ticari Dava</option>
+                                    <option value="is">İş Davası</option>
+                                    <option value="aile">Aile Hukuku</option>
+                                    <option value="ceza">Ceza Davası</option>
+                                    <option value="icra">İcra Takibi</option>
+                                    <option value="diger">Diğer</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="edit-status">Durum</label>
+                                <select id="edit-status">
+                                    <option value="active">Devam Ediyor</option>
+                                    <option value="pending">Beklemede</option>
+                                    <option value="closed">Karara Bağlandı</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="edit-filing-date">Dava Tarihi</label>
+                                <input type="date" id="edit-filing-date">
+                            </div>
+                            <div class="form-group">
+                                <label for="edit-hearing-date">Duruşma Tarihi</label>
+                                <input type="datetime-local" id="edit-hearing-date">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="edit-description">Konu / Açıklama</label>
+                            <textarea id="edit-description" rows="4"></textarea>
+                        </div>
+                        <div class="form-actions">
+                            <button type="button" class="btn-danger" onclick="app.deleteCase()">
+                                <i class="fa-solid fa-trash"></i> Davayı Sil
+                            </button>
+                            <button type="submit" class="btn-primary">
+                                <i class="fa-solid fa-save"></i> Değişiklikleri Kaydet
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+
+</html>
