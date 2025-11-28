@@ -149,7 +149,85 @@ class TanApp {
         this.setupForm();
         this.setupSearch();
         this.setupEditForm();
+        this.setupVoiceAgent();
         this.renderDashboard();
+    }
+
+    setupVoiceAgent() {
+        const btn = document.getElementById('voice-agent-btn');
+        const status = document.getElementById('voice-status');
+
+        if (!('webkitSpeechRecognition' in window)) {
+            btn.style.display = 'none';
+            console.log('Web Speech API not supported');
+            return;
+        }
+
+        const recognition = new webkitSpeechRecognition();
+        recognition.continuous = false;
+        recognition.lang = 'tr-TR';
+
+        btn.addEventListener('click', () => {
+            if (btn.classList.contains('listening')) {
+                recognition.stop();
+            } else {
+                recognition.start();
+            }
+        });
+
+        recognition.onstart = () => {
+            btn.classList.add('listening');
+            btn.innerHTML = '<i class="fa-solid fa-microphone-lines"></i> Dinliyorum...';
+            status.innerText = 'Dinliyorum...';
+            status.classList.add('active');
+        };
+
+        recognition.onend = () => {
+            btn.classList.remove('listening');
+            btn.innerHTML = '<i class="fa-solid fa-microphone"></i> Asistana Sor';
+            // Don't clear status immediately if processing
+        };
+
+        recognition.onresult = async (event) => {
+            const transcript = event.results[0][0].transcript;
+            status.innerText = `"${transcript}"`;
+
+            await this.processVoiceCommand(transcript);
+        };
+    }
+
+    async processVoiceCommand(query) {
+        const status = document.getElementById('voice-status');
+        status.innerText = 'Düşünüyorum...';
+
+        try {
+            const response = await fetch('/api/agent', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    query: query,
+                    context: this.cases
+                })
+            });
+
+            const data = await response.json();
+
+            status.innerText = data.response;
+            this.speakResponse(data.response);
+
+        } catch (error) {
+            console.error('AI Error:', error);
+            status.innerText = 'Bir hata oluştu.';
+            this.speakResponse('Üzgünüm, bir hata oluştu.');
+        }
+    }
+
+    speakResponse(text) {
+        const utterance = new SpeechSynthesisUtterance(text);
+        utterance.lang = 'tr-TR';
+        window.speechSynthesis.speak(utterance);
     }
 
     setupEditForm() {

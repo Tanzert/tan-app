@@ -1,13 +1,13 @@
 :root {
-    --bg-color: #e0e5ec;
+    --bg-color: #f4f7f6; /* Changed from #e0e5ec */
     --text-main: #4a4a4a;
     --text-light: #8d939e;
-    --accent-color: #6d5dfc;
+    --accent-color: #3498db; /* Changed from #6d5dfc */
     /* Soft purple/blue for contrast */
     --accent-hover: #5b4cc4;
-    --danger-color: #e55039;
-    --success-color: #38d39f;
-    --warning-color: #f6b93b;
+    --danger-color: #e74c3c; /* Changed from #e55039 */
+    --success-color: #2ecc71; /* Changed from #38d39f */
+    --warning-color: #f1c40f; /* Changed from #f6b93b */
 
     --shadow-light: -9px -9px 16px rgba(255, 255, 255, 0.8);
     --shadow-dark: 9px 9px 16px rgba(163, 177, 198, 0.6);
